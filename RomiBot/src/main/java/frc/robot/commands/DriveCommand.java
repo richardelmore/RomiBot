@@ -4,21 +4,29 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.RomiDrivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.RomiDrivetrain;
+
+import java.util.function.DoubleSupplier;
+
 
 /** An example command that uses an example subsystem. */
-public class ExampleCommand extends CommandBase {
+public class DriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final RomiDrivetrain m_subsystem;
+  private final RomiDrivetrain romiDrivetrain;
+  private final DoubleSupplier xSpeedSupplier;
+  private final DoubleSupplier zSpeedSupplier;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ExampleCommand(RomiDrivetrain subsystem) {
-    m_subsystem = subsystem;
+  public DriveCommand(RomiDrivetrain subsystem, DoubleSupplier xSpeed, DoubleSupplier zSpeed) {
+    romiDrivetrain = subsystem;
+    xSpeedSupplier = xSpeed;
+    zSpeedSupplier = zSpeed;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -29,7 +37,9 @@ public class ExampleCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    romiDrivetrain.arcadeDrive(xSpeedSupplier.getAsDouble(), zSpeedSupplier.getAsDouble());
+  }
 
   // Called once the command ends or is interrupted.
   @Override

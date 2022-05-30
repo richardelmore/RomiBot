@@ -5,9 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.RomiDrivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
+
+import static frc.robot.Constants.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -16,15 +18,26 @@ import edu.wpi.first.wpilibj2.command.Command;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final RomiDrivetrain m_romiDrivetrain = new RomiDrivetrain();
+  private final XboxController controller = new XboxController(DRIVE_CONTROLLER_PORT);
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_romiDrivetrain);
+  private RomiDrivetrain driveSubsystem;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the button bindings
+    createSubsystems();
+    createCommands();
     configureButtonBindings();
+  }
+
+  private void createSubsystems()
+  {
+    driveSubsystem = new RomiDrivetrain();
+  }
+
+  private void createCommands()
+  {
+    DriveCommand driveCommand = new DriveCommand(driveSubsystem, () -> controller.getLeftY(), () -> controller.getRightX());
+    driveSubsystem.setDefaultCommand(driveCommand);
   }
 
   /**
@@ -42,6 +55,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return null;
   }
 }
